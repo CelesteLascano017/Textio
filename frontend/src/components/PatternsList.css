@@ -1,0 +1,62 @@
+.patterns-list {
+  background-color: var(--color-card-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  min-width: 250px;
+}
+
+.patterns-title {
+  color: #333;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+}
+
+.patterns-empty {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.patterns-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.pattern-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: #333;
+}
+
+.pattern-name {
+  flex: 1;
+}
+
+.pattern-arrow {
+  color: #888;
+  font-weight: 300;
+}
+
+.pattern-category {
+  font-weight: 500;
+}
+
+.pattern-category.cat-queja-leve {
+  color: var(--color-queja-leve);
+}
+
+.pattern-category.cat-reclamo {
+  color: var(--color-reclamo);
+}
+
+.pattern-category.cat-reclamo-crítico {
+  color: var(--color-reclamo-critico);
+}
+
+.pattern-category.cat-riesgo-legal {
+  color: var(--color-riesgo-legal);
+}

@@ -1,0 +1,11 @@
+.highlighted-text {
+  line-height: 1.8;
+}
+
+.highlight-pattern {
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  font-weight: 500;
+}

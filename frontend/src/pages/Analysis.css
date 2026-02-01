@@ -1,0 +1,73 @@
+.analysis-page {
+  padding: var(--spacing-xl) var(--spacing-lg);
+}
+
+.analysis-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.severity-title {
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.severity-title.severity-none {
+  color: #2e7d32;
+}
+
+.severity-title.severity-low {
+  color: var(--color-queja-leve);
+}
+
+.severity-title.severity-medium {
+  color: var(--color-reclamo);
+}
+
+.severity-title.severity-critical {
+  color: var(--color-reclamo-critico);
+}
+
+.analysis-content {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.analysis-text-panel {
+  background-color: var(--color-card-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  color: #333;
+  line-height: 1.8;
+  font-size: var(--font-size-base);
+}
+
+.analysis-meta {
+  display: flex;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.meta-item strong {
+  color: var(--color-text-primary);
+}
+
+.analysis-actions {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+@media (max-width: 768px) {
+  .analysis-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .analysis-meta {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+}
