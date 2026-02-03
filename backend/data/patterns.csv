@@ -1,22 +1,23 @@
 pattern,category,alert_level,alert_message
-defecto,producto_defectuoso,high,Posible defecto detectado en el producto
+defecto,problema_general,high,"Patrón ""defecto"" detectado"
 problema,problema_general,medium,Se menciona un problema
-no funciona,producto_no_funcional,high,Producto no funciona correctamente
-roto,producto_danado,high,Producto roto o danado
-incompleto,producto_incompleto,medium,Producto incompleto
-demora,demora_entrega,medium,Demora en la entrega
-no llego,entrega_faltante,high,Producto no llego
-perdido,entrega_perdida,high,Pedido perdido
-dano,daño,high,Producto danado en transito
-calidad,problema_calidad,medium,Problema de calidad
-insatisfecho,insatisfaccion,medium,Cliente insatisfecho
-pésimo,muy_malo,high,Experiencia pésima
-malo,malo,medium,Calidad mala
-decepcion,decepcion,medium,Cliente decepcionado
-refund,devolucion,medium,Cliente solicita reembolso
-cambio,cambio_producto,medium,Cliente solicita cambio
-no recomiendo,desconfianza,medium,No recomendaria el servicio
-fraude,fraude,high,Posible fraude detectado
-engano,engano,high,Posible engano detectado
-no entiendo,confuso,low,Cliente confundido
-ayuda,solicitud_ayuda,low,Cliente solicita asistencia
+no funciona,reclamo,high,"Patrón ""no funciona"" detectado"
+roto,reclamo_critico,high,"Patrón ""roto"" detectado"
+incompleto,problema_general,medium,"Patrón ""incompleto"" detectado"
+demora,problema_general,medium,"Patrón ""demora"" detectado"
+no llego,reclamo_critico,high,"Patrón ""no llego"" detectado"
+perdido,reclamo_critico,high,"Patrón ""perdido"" detectado"
+dano,reclamo,high,"Patrón ""dano"" detectado"
+calidad,problema_general,medium,"Patrón ""calidad"" detectado"
+insatisfecho,problema_general,medium,"Patrón ""insatisfecho"" detectado"
+pésimo,reclamo,high,"Patrón ""pésimo"" detectado"
+malo,problema_general,medium,"Patrón ""malo"" detectado"
+decepcion,problema_general,medium,"Patrón ""decepcion"" detectado"
+refund,problema_general,medium,"Patrón ""refund"" detectado"
+cambio,problema_general,medium,"Patrón ""cambio"" detectado"
+no recomiendo,problema_general,medium,"Patrón ""no recomiendo"" detectado"
+fraude,riesgo_legal,high,"Patrón ""fraude"" detectado"
+engano,riesgo_legal,high,"Patrón ""engano"" detectado"
+no entiendo,problema_general,low,"Patrón ""no entiendo"" detectado"
+celes,riesgo_legal,high,"Patrón ""celes"" detectado"
+roro,reclamo_critico,medium,"Patrón ""roro"" detectado"

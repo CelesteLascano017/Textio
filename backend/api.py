@@ -293,6 +293,162 @@ def compare_algorithms(request: AnalyzeRequest):
         )
 
 
+# ==================== PATTERN CRUD ENDPOINTS ====================
+
+class PatternRequest(BaseModel):
+    """Modelo para crear/actualizar patrón."""
+    pattern: str = Field(..., min_length=1, max_length=100, description="Patrón de texto")
+    category: str = Field(..., min_length=1, max_length=50, description="Categoría del patrón")
+    alert_level: str = Field(default="medium", description="Nivel: 'high', 'medium', 'low'")
+    alert_message: str = Field(default="", max_length=200, description="Mensaje de alerta")
+
+
+@app.post("/patterns", tags=["Patterns"])
+def create_pattern(request: PatternRequest):
+    """
+    Crea un nuevo patrón.
+    """
+    if not detector:
+        raise HTTPException(status_code=503, detail="Detector not available")
+    
+    if request.alert_level not in ["high", "medium", "low"]:
+        raise HTTPException(status_code=400, detail="alert_level debe ser 'high', 'medium' o 'low'")
+    
+    try:
+        result = detector.add_pattern(
+            pattern=request.pattern,
+            category=request.category,
+            alert_level=request.alert_level,
+            alert_message=request.alert_message or f"Patrón '{request.pattern}' detectado"
+        )
+        detector.save_patterns()
+        return {"success": True, "pattern": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al crear patrón: {str(e)}")
+
+
+@app.put("/patterns/{index}", tags=["Patterns"])
+def update_pattern(index: int, request: PatternRequest):
+    """
+    Actualiza un patrón existente por índice.
+    """
+    if not detector:
+        raise HTTPException(status_code=503, detail="Detector not available")
+    
+    if request.alert_level not in ["high", "medium", "low"]:
+        raise HTTPException(status_code=400, detail="alert_level debe ser 'high', 'medium' o 'low'")
+    
+    try:
+        result = detector.update_pattern(
+            index=index,
+            pattern=request.pattern,
+            category=request.category,
+            alert_level=request.alert_level,
+            alert_message=request.alert_message or f"Patrón '{request.pattern}' detectado"
+        )
+        detector.save_patterns()
+        return {"success": True, "pattern": result}
+    except IndexError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al actualizar patrón: {str(e)}")
+
+
+@app.delete("/patterns/{index}", tags=["Patterns"])
+def delete_pattern(index: int):
+    """
+    Elimina un patrón por índice.
+    """
+    if not detector:
+        raise HTTPException(status_code=503, detail="Detector not available")
+    
+    try:
+        result = detector.delete_pattern(index)
+        detector.save_patterns()
+        return {"success": True, "deleted": result}
+    except IndexError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al eliminar patrón: {str(e)}")
+
+
+@app.post("/patterns/save", tags=["Patterns"])
+def save_all_patterns():
+    """
+    Guarda todos los patrones actuales al archivo CSV.
+    """
+    if not detector:
+        raise HTTPException(status_code=503, detail="Detector not available")
+    
+    try:
+        detector.save_patterns()
+        return {"success": True, "patterns_saved": len(detector.patterns)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al guardar patrones: {str(e)}")
+
+
+@app.post("/patterns/reload", tags=["Patterns"])
+def reload_patterns():
+    """
+    Recarga patrones desde el archivo CSV.
+    """
+    if not detector:
+        raise HTTPException(status_code=503, detail="Detector not available")
+    
+    try:
+        count = detector.reload_patterns()
+        return {"success": True, "patterns_loaded": count}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al recargar patrones: {str(e)}")
+
+
+# ==================== SETUP CONFIG ENDPOINTS ====================
+
+# Simple in-memory config storage (could be replaced with database)
+_setup_config = {
+    "text_name": "",
+    "pattern_group": "Claims",
+    "algorithm": "kmp"
+}
+
+
+class SetupConfigRequest(BaseModel):
+    """Modelo de configuración del setup."""
+    text_name: str = Field(default="", max_length=100)
+    pattern_group: str = Field(default="Claims", description="Grupo: 'Claims', 'Complaints', 'Custom'")
+    algorithm: str = Field(default="kmp", description="Algoritmo: 'kmp' o 'boyer_moore'")
+
+
+@app.get("/setup/config", tags=["Setup"])
+def get_setup_config():
+    """
+    Obtiene la configuración actual del setup.
+    """
+    return _setup_config
+
+
+@app.post("/setup/config", tags=["Setup"])
+def save_setup_config(request: SetupConfigRequest):
+    """
+    Guarda la configuración del setup.
+    """
+    global _setup_config
+    
+    if request.pattern_group not in ["Claims", "Complaints", "Custom"]:
+        raise HTTPException(status_code=400, detail="pattern_group debe ser 'Claims', 'Complaints' o 'Custom'")
+    
+    if request.algorithm not in ["kmp", "boyer_moore"]:
+        raise HTTPException(status_code=400, detail="algorithm debe ser 'kmp' o 'boyer_moore'")
+    
+    _setup_config = {
+        "text_name": request.text_name,
+        "pattern_group": request.pattern_group,
+        "algorithm": request.algorithm
+    }
+    
+    return {"success": True, "config": _setup_config}
+
+
 # ==================== MANEJO DE ERRORES ====================
 
 @app.exception_handler(ValueError)

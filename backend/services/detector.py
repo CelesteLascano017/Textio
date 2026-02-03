@@ -178,6 +178,113 @@ class ComplaintDetector:
         }
 
 
+    def add_pattern(self, pattern: str, category: str, alert_level: str, 
+                    alert_message: str) -> dict:
+        """
+        Agrega un nuevo patrón.
+        
+        Args:
+            pattern: Patrón a agregar
+            category: Categoría del patrón
+            alert_level: Nivel de alerta (high, medium, low)
+            alert_message: Mensaje de alerta
+        
+        Returns:
+            El patrón agregado con su índice
+        """
+        new_pattern = {
+            'pattern': pattern.strip(),
+            'category': category.strip(),
+            'alert_level': alert_level.strip(),
+            'alert_message': alert_message.strip(),
+        }
+        self.patterns.append(new_pattern)
+        return {'index': len(self.patterns) - 1, **new_pattern}
+    
+    def update_pattern(self, index: int, pattern: str, category: str, 
+                       alert_level: str, alert_message: str) -> dict:
+        """
+        Actualiza un patrón existente.
+        
+        Args:
+            index: Índice del patrón a actualizar
+            pattern: Nuevo patrón
+            category: Nueva categoría
+            alert_level: Nuevo nivel de alerta
+            alert_message: Nuevo mensaje de alerta
+        
+        Returns:
+            El patrón actualizado
+        """
+        if index < 0 or index >= len(self.patterns):
+            raise IndexError(f"Índice {index} fuera de rango")
+        
+        self.patterns[index] = {
+            'pattern': pattern.strip(),
+            'category': category.strip(),
+            'alert_level': alert_level.strip(),
+            'alert_message': alert_message.strip(),
+        }
+        return {'index': index, **self.patterns[index]}
+    
+    def delete_pattern(self, index: int) -> dict:
+        """
+        Elimina un patrón.
+        
+        Args:
+            index: Índice del patrón a eliminar
+        
+        Returns:
+            El patrón eliminado
+        """
+        if index < 0 or index >= len(self.patterns):
+            raise IndexError(f"Índice {index} fuera de rango")
+        
+        deleted = self.patterns.pop(index)
+        return {'deleted_index': index, **deleted}
+    
+    def save_patterns(self, patterns_file: Optional[str] = None) -> bool:
+        """
+        Guarda patrones actuales a archivo CSV.
+        
+        Args:
+            patterns_file: Ruta al archivo (usa default si es None)
+        
+        Returns:
+            True si se guardó correctamente
+        """
+        if patterns_file is None:
+            base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            patterns_file = os.path.join(base_path, "data", "patterns.csv")
+        
+        with open(patterns_file, 'w', encoding='utf-8', newline='') as f:
+            fieldnames = ['pattern', 'category', 'alert_level', 'alert_message']
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            for p in self.patterns:
+                writer.writerow(p)
+        
+        return True
+    
+    def reload_patterns(self, patterns_file: Optional[str] = None) -> int:
+        """
+        Recarga patrones desde archivo.
+        
+        Args:
+            patterns_file: Ruta al archivo (usa default si es None)
+        
+        Returns:
+            Número de patrones cargados
+        """
+        if patterns_file is None:
+            base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            patterns_file = os.path.join(base_path, "data", "patterns.csv")
+        
+        self.patterns = []
+        self.load_patterns(patterns_file)
+        return len(self.patterns)
+
+
 def create_detector(patterns_path: Optional[str] = None) -> ComplaintDetector:
     """
     Factory para crear detector con ruta por defecto.
