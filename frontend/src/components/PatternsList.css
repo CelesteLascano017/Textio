@@ -2,7 +2,7 @@
   background-color: var(--color-card-bg);
   border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
-  min-width: 250px;
+  min-width: 280px;
 }
 
 .patterns-title {
@@ -30,10 +30,13 @@
   gap: var(--spacing-sm);
   font-size: var(--font-size-sm);
   color: #333;
+  padding: var(--spacing-xs) 0;
+  border-bottom: 1px solid #eee;
 }
 
 .pattern-name {
   flex: 1;
+  font-weight: 500;
 }
 
 .pattern-arrow {
@@ -43,20 +46,32 @@
 
 .pattern-category {
   font-weight: 500;
+  color: #555;
+  font-size: var(--font-size-xs);
 }
 
-.pattern-category.cat-queja-leve {
-  color: var(--color-queja-leve);
+/* Alert Level Badges */
+.pattern-alert {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.pattern-category.cat-reclamo {
-  color: var(--color-reclamo);
+.pattern-alert.alert-high {
+  background-color: rgba(231, 76, 60, 0.15);
+  color: var(--color-alert-high);
 }
 
-.pattern-category.cat-reclamo-crítico {
-  color: var(--color-reclamo-critico);
+.pattern-alert.alert-medium {
+  background-color: rgba(243, 156, 18, 0.15);
+  color: var(--color-alert-medium);
 }
 
-.pattern-category.cat-riesgo-legal {
-  color: var(--color-riesgo-legal);
+.pattern-alert.alert-low {
+  background-color: rgba(52, 152, 219, 0.15);
+  color: var(--color-alert-low);
 }

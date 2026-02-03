@@ -30,10 +30,21 @@
   line-height: 1.6;
 }
 
+.save-status {
+  display: inline-block;
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: #2ecc71;
+  background: rgba(46, 204, 113, 0.15);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
 .setup-form {
   background-color: var(--color-card-bg);
   border-radius: var(--radius-xl);
   padding: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
 }
 
 .form-row {
@@ -84,6 +95,7 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
+  justify-content: flex-end;
 }
 
 .algorithm-select {
@@ -93,9 +105,74 @@
 
 .form-actions .btn {
   padding: var(--spacing-sm) var(--spacing-xl);
+  font-weight: 600;
 }
 
-.form-actions .btn:disabled {
-  opacity: 0.6;
+/* GO! Button - Primary action with high visibility */
+.btn-go {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+  color: white;
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  padding: var(--spacing-md) var(--spacing-2xl) !important;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+  transition: all var(--transition-normal);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-go:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 92, 231, 0.6);
+  background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent));
+}
+
+.btn-go:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(108, 92, 231, 0.4);
+}
+
+.btn-go:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+  background: #999;
+  box-shadow: none;
+}
+
+.patterns-info {
+  text-align: center;
+  margin-top: var(--spacing-lg);
+}
+
+.patterns-count {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.patterns-count strong {
+  color: var(--color-accent-light);
+}
+
+.loading-state {
+  text-align: center;
+  color: var(--color-text-secondary);
+  padding: var(--spacing-2xl);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .btn-go {
+    width: 100%;
+    margin-top: var(--spacing-sm);
+  }
 }

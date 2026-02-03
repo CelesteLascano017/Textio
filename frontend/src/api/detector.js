@@ -41,3 +41,72 @@ export async function checkHealth() {
   if (!response.ok) throw new Error('API not healthy');
   return response.json();
 }
+
+// ==================== Pattern CRUD ====================
+
+export async function createPattern(pattern) {
+  const response = await fetch(`${API_BASE}/patterns`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(pattern)
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || 'Failed to create pattern');
+  }
+  return response.json();
+}
+
+export async function updatePattern(index, pattern) {
+  const response = await fetch(`${API_BASE}/patterns/${index}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(pattern)
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || 'Failed to update pattern');
+  }
+  return response.json();
+}
+
+export async function deletePattern(index) {
+  const response = await fetch(`${API_BASE}/patterns/${index}`, {
+    method: 'DELETE'
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || 'Failed to delete pattern');
+  }
+  return response.json();
+}
+
+export async function saveAllPatterns() {
+  const response = await fetch(`${API_BASE}/patterns/save`, {
+    method: 'POST'
+  });
+  if (!response.ok) throw new Error('Failed to save patterns');
+  return response.json();
+}
+
+// ==================== Setup Config ====================
+
+export async function getSetupConfig() {
+  const response = await fetch(`${API_BASE}/setup/config`);
+  if (!response.ok) throw new Error('Failed to get setup config');
+  return response.json();
+}
+
+export async function saveSetupConfig(config) {
+  const response = await fetch(`${API_BASE}/setup/config`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(config)
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || 'Failed to save config');
+  }
+  return response.json();
+}
+

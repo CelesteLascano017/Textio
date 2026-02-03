@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { analyzeText, getPatterns } from '../api/detector';
+import { analyzeText, getPatterns, getSetupConfig, saveSetupConfig } from '../api/detector';
 import './Setup.css';
 
 export default function Setup() {
@@ -11,10 +11,53 @@ export default function Setup() {
   const [algorithm, setAlgorithm] = useState('kmp');
   const [loading, setLoading] = useState(false);
   const [patterns, setPatterns] = useState([]);
+  const [configLoading, setConfigLoading] = useState(true);
+  const [saveStatus, setSaveStatus] = useState('');
 
+  // Load saved configuration and patterns on mount
   useEffect(() => {
-    getPatterns().then(data => setPatterns(data.patterns || [])).catch(console.error);
+    const loadData = async () => {
+      try {
+        const [patternsData, configData] = await Promise.all([
+          getPatterns(),
+          getSetupConfig()
+        ]);
+        setPatterns(patternsData.patterns || []);
+        if (configData) {
+          setTextName(configData.text_name || '');
+          setPatternGroup(configData.pattern_group || 'Claims');
+          setAlgorithm(configData.algorithm || 'kmp');
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+        setConfigLoading(false);
+      }
+    };
+    loadData();
   }, []);
+
+  // Auto-save config when values change (debounced)
+  useEffect(() => {
+    if (configLoading) return;
+    
+    const saveConfig = async () => {
+      try {
+        await saveSetupConfig({
+          text_name: textName,
+          pattern_group: patternGroup,
+          algorithm: algorithm
+        });
+        setSaveStatus('Configuración guardada');
+        setTimeout(() => setSaveStatus(''), 2000);
+      } catch (error) {
+        console.error('Error saving config:', error);
+      }
+    };
+
+    const timeoutId = setTimeout(saveConfig, 500);
+    return () => clearTimeout(timeoutId);
+  }, [textName, patternGroup, algorithm, configLoading]);
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -52,15 +95,26 @@ export default function Setup() {
     navigate('/patterns');
   };
 
+  if (configLoading) {
+    return (
+      <div className="setup-page">
+        <div className="setup-container">
+          <div className="loading-state">Loading configuration...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="setup-page">
       <div className="setup-container">
         <div className="setup-header">
           <h1 className="setup-title">Automatic Patterns Detection</h1>
           <p className="setup-description">
-            Glyph detects user-defined patterns in text or individual words, using efficient
+            Textio detects user-defined patterns in text or individual words, using efficient
             algorithms like Knuth–Morris–Pratt and Boyer–Moore.
           </p>
+          {saveStatus && <span className="save-status">{saveStatus}</span>}
         </div>
 
         <div className="setup-form">
@@ -106,17 +160,23 @@ export default function Setup() {
               <option value="kmp">KMP</option>
               <option value="boyer_moore">Boyer-Moore</option>
             </select>
-            <button className="btn btn-secondary" onClick={handleAdapt}>
-              Adapt
+            <button className="btn btn-secondary " onClick={handleAdapt}>
+              Setup
             </button>
             <button 
-              className="btn btn-primary" 
+              className="btn btn-go" 
               onClick={handleAnalyze}
               disabled={loading || !text.trim()}
             >
               {loading ? 'Analyzing...' : 'GO!'}
             </button>
           </div>
+        </div>
+
+        <div className="patterns-info">
+          <p className="patterns-count">
+            <strong>{patterns.length}</strong> patterns loaded
+          </p>
         </div>
       </div>
     </div>

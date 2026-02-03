@@ -149,13 +149,13 @@ a:hover {
 }
 
 .btn-secondary {
-  background-color: transparent;
-  color: var(--color-text-primary);
+  background-color: rgb(178, 153, 235);
+  color: #1a1a2e;
   border: 2px solid var(--color-card-bg);
 }
 
 .btn-secondary:hover {
-  background-color: rgba(255,255,255,0.1);
+  background-color: rgba(206, 140, 219, 0.1);
 }
 
 .btn-accent {
